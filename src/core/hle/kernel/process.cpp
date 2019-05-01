@@ -147,8 +147,7 @@ void Process::PrepareForTermination() {
                 continue;
 
             // TODO(Subv): When are the other running/ready threads terminated?
-            ASSERT_MSG(thread->GetStatus() == ThreadStatus::WaitSynchAny ||
-                           thread->GetStatus() == ThreadStatus::WaitSynchAll,
+            ASSERT_MSG(thread->GetStatus() == ThreadStatus::WaitSynch,
                        "Exiting processes with non-waiting threads is currently unimplemented");
 
             thread->Stop();
@@ -242,7 +241,8 @@ void Process::LoadModule(CodeSet module_, VAddr base_addr) {
 }
 
 Process::Process(Core::System& system)
-    : WaitObject{system.Kernel()}, address_arbiter{system}, mutex{system}, system{system} {}
+    : WaitObject{system.Kernel()}, vm_manager{system},
+      address_arbiter{system}, mutex{system}, system{system} {}
 
 Process::~Process() = default;
 
